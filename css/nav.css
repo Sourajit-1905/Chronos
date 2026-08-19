@@ -1,0 +1,100 @@
+/* ── Sidebar ──────────────────────────────────────────────────── */
+.sidebar {
+    width: 220px;
+    background: var(--bg2);
+    border-right: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+    transition: transform .3s;
+}
+
+.logo {
+    padding: 0 20px 24px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .15s;
+    font-size: 14px;
+    border-left: 2px solid transparent;
+}
+
+.nav-item:hover {
+    background: var(--glass);
+    color: var(--text);
+}
+
+.nav-item.active {
+    background: var(--accent-glow);
+    color: var(--accent);
+    border-left-color: var(--accent);
+}
+
+.nav-item svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ── Mobile bottom nav ────────────────────────────────────────── */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg2);
+    border-top: 1px solid var(--glass-border);
+    padding: 8px 0;
+    z-index: 100;
+    justify-content: space-around;
+}
+
+.mob-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    cursor: pointer;
+    color: var(--text3);
+    font-size: 10px;
+    transition: color .15s;
+}
+
+.mob-nav-item.active {
+    color: var(--accent);
+}
+
+.mob-nav-item svg {
+    width: 22px;
+    height: 22px;
+}

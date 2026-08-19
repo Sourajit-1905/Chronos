@@ -1,0 +1,205 @@
+/* ── Timer ring ───────────────────────────────────────────────── */
+.ring-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.06);
+    stroke-width: 8;
+}
+
+.ring-prog {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset .8s linear, stroke .3s;
+}
+
+.ring-glow {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+    opacity: 0.15;
+    filter: blur(4px);
+    transition: stroke-dashoffset .8s linear, stroke .3s;
+}
+
+/* ── Timer ring wrapper ───────────────────────────────────────── */
+.timer-ring-wrap {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    margin: 0 auto 32px;
+}
+
+.timer-ring-wrap svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+}
+
+/* ── Timer display (text inside ring) ────────────────────────── */
+.timer-display {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.timer-time {
+    font-size: 48px;
+    font-weight: 300;
+    letter-spacing: -2px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.timer-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 4px;
+}
+
+/* ── Timer centre wrapper ─────────────────────────────────────── */
+.timer-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 0;
+}
+
+/* ── Controls ─────────────────────────────────────────────────── */
+.timer-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.ctrl-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    transition: all .15s;
+    font-size: 20px;
+}
+
+.ctrl-btn-main {
+    background: var(--accent);
+    color: #fff;
+    width: 64px;
+    height: 64px;
+    font-size: 24px;
+}
+
+.ctrl-btn-main:hover {
+    background: #5a7de8;
+    transform: scale(1.05);
+}
+
+.ctrl-btn-sec {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text2);
+}
+
+.ctrl-btn-sec:hover {
+    background: var(--glass-hover);
+    color: var(--text);
+}
+
+/* ── Presets ──────────────────────────────────────────────────── */
+.presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 32px;
+}
+
+.preset-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    color: var(--text2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.preset-btn:hover,
+.preset-btn.sel {
+    background: var(--accent-glow);
+    border-color: rgba(108, 142, 245, 0.3);
+    color: var(--accent);
+}
+
+/* ── Saved timer cards ────────────────────────────────────────── */
+.timers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.timer-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color .15s;
+}
+
+.timer-card:hover {
+    border-color: rgba(108, 142, 245, 0.3);
+}
+
+.timer-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.timer-card-name {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.timer-card-time {
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-variant-numeric: tabular-nums;
+}
+
+.timer-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* ── Responsive adjustments ───────────────────────────────────── */
+@media (max-width: 768px) {
+    .timer-ring-wrap {
+        width: 200px;
+        height: 200px;
+    }
+
+    .timer-time {
+        font-size: 40px;
+    }
+}
