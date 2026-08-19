@@ -1,0 +1,21 @@
+{
+  "name": "chronos-timer",
+  "version": "1.0.0",
+  "description": "A glassmorphic productivity timer app with an AI Focus Coach powered by Gemini.",
+  "keywords": ["timer", "pomodoro", "stopwatch", "productivity", "focus", "gemini", "ai"],
+  "homepage": "https://github.com/you/chronos",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start":   "node proxy-server.js",
+    "dev":     "node proxy-server.js",
+    "serve":   "python3 -m http.server ${PORT:-8080}",
+    "lint":    "npx eslint js/**/*.js",
+    "fmt":     "npx prettier --write \"**/*.{html,css,js,md,json}\"",
+    "check":   "npx prettier --check \"**/*.{html,css,js,md,json}\""
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {}
+}

@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "EditorConfig.EditorConfig",
+    "ritwickdey.LiveServer",
+    "ecmel.vscode-html-css",
+    "formulahendry.auto-rename-tag",
+    "csstools.postcss"
+  ]
+}

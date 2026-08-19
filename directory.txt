@@ -1,0 +1,162 @@
+chronos/
+├── index.html                  # Entry point — clean markup, no inline styles or scripts
+├── README.md                   # Full project documentation
+├── directory.txt               # This file — annotated project map
+├── .gitignore                  # Git ignore rules
+├── .env.example                # Example environment variables (copy to .env)
+├── package.json                # Project metadata + npm scripts (no dependencies)
+├── proxy-server.js             # Node.js dev server + Gemini API proxy
+│
+├── css/
+│   ├── base.css                # Reset, CSS custom properties, layout skeleton, shared components
+│   │                           #   → variables: --bg, --accent, --glass, --radius, etc.
+│   │                           #   → .btn, .card, .form-input, .section-head, .kbd
+│   ├── nav.css                 # Sidebar (220px fixed) + mobile bottom navigation bar
+│   ├── timer.css               # SVG ring (.ring-track / .ring-prog / .ring-glow)
+│   │                           #   → .timer-ring-wrap, .timer-display, .timer-time
+│   │                           #   → .ctrl-btn, .preset-btn, .timer-card grid
+│   ├── views.css               # Per-view styles:
+│   │                           #   → Dashboard: .hero, .stats-grid, .stat-card
+│   │                           #   → Pomodoro:  .pomo-wrap, .pomo-mode-btn, .session-dot
+│   │                           #   → Stopwatch: .sw-wrap, .sw-time, .lap-list, .lap-item
+│   │                           #   → History:   .history-list, .bar-chart, .bar
+│   │                           #   → Settings:  .settings-section, .toggle, .vol-slider
+│   ├── overlays.css            # Modal backdrop + dialog, completion screen, toast stack
+│   └── coach.css               # AI Coach view:
+│                               #   → .coach-wrap (2-col grid), .chat-panel, .chat-messages
+│                               #   → .msg / .msg-user / .msg-coach, .msg-bubble
+│                               #   → .typing-dots, .chat-input-wrap, .send-btn
+│                               #   → .quick-prompts-card, .plan-card, .plan-item
+│
+└── js/
+    ├── app.js                  # Boot module — imports + inits all modules, exposes window.App
+    │                           #   window.App is used by HTML onclick= attributes
+    │
+    ├── state.js                # Single source of truth for all runtime state
+    │                           #   → settings, savedTimers, historyData, pomoConfig (persisted)
+    │                           #   → dashState, pomoState, swState (in-memory)
+    │                           #   → save(key, val) / load(key) localStorage helpers
+    │                           #   → saveAll() — flushes all persisted state at once
+    │
+    ├── utils.js                # Pure, side-effect-free helpers
+    │                           #   → fmt(secs)   — "MM:SS" or "H:MM:SS"
+    │                           #   → fmtMs(ms)   — "MM:SS.cs" for stopwatch
+    │                           #   → pad(n)      — zero-pad to 2 digits
+    │                           #   → setRing(prog, glow, pct) — SVG stroke-dashoffset
+    │                           #   → setWrapState(wrap, state) — idle/running/paused/done
+    │                           #   → setPlayBtn(icon, playing) — swaps play ↔ pause SVG
+    │                           #   → toast(msg, type) — appends a self-removing toast
+    │                           #   → escHtml(s)  — XSS-safe HTML encoding
+    │
+    ├── audio.js                # Web Audio API synth engine (no audio files required)
+    │                           #   → playSound(type) — bell | chime | pulse | soft
+    │                           #   → sendNotif(title, body) — browser Notification API
+    │
+    ├── nav.js                  # View router
+    │                           #   → navigate(view) — swaps .active class, triggers view init
+    │                           #   → initNav()      — attaches [data-view] click listeners
+    │                           #   → currentView    — exported string, read by keyboard.js
+    │
+    ├── keyboard.js             # Global keydown bindings (ignored inside inputs)
+    │                           #   Space → start/pause (current view)
+    │                           #   R     → reset
+    │                           #   L     → lap (stopwatch only)
+    │                           #   1–7   → quick presets on dashboard
+    │
+    ├── dashboard.js            # Quick timer logic
+    │                           #   → setDashPreset(min), toggleDashTimer()
+    │                           #   → start / pause / reset / addMinute / tickFn
+    │                           #   → showCompletion / closeCompletion / restartFromCompletion
+    │                           #   → addHistory(name, duration) — shared by pomodoro.js
+    │
+    ├── pomodoro.js             # Pomodoro engine
+    │                           #   → setPomoMode(mode)   — focus | short | long
+    │                           #   → togglePomo / pomoReset / pomoSkip
+    │                           #   → adjustPomo(type, delta) — live config adjustment
+    │                           #   → auto-advance between phases, optional auto-start
+    │
+    ├── stopwatch.js            # Stopwatch
+    │                           #   → toggleSW / swReset / swLap
+    │                           #   → 50ms tick via setInterval
+    │                           #   → lap list with best (green) / worst (red) highlights
+    │
+    ├── timers.js               # Saved timers CRUD
+    │                           #   → openCreateModal / closeCreateModal / fillPreset
+    │                           #   → createTimer / editTimer / deleteTimer
+    │                           #   → startSavedTimer(id) — navigates to dashboard + starts
+    │                           #   → renderSavedTimers() — rebuilds the timer card grid
+    │
+    ├── history.js              # Session history + stats
+    │                           #   → renderHistory()   — list + chart + breakdown
+    │                           #   → updateStats()     — dashboard stat cards
+    │                           #   → clearHistory()
+    │                           #   → renderChart()     — 7-day bar chart (last 7 days)
+    │                           #   → renderBreakdown() — total / avg / longest / count
+    │
+    ├── settings.js             # Settings page
+    │                           #   → applySettings()        — syncs UI to saved state
+    │                           #   → toggleSetting(el, key) — boolean toggle + persist
+    │                           #   → setAccent(c1, c2, el)  — live CSS variable update
+    │                           #   → setVolume(val)
+    │                           #   → requestNotifPerms(el)  — Notification.requestPermission
+    │                           #   → previewSound()
+    │
+    ├── coach.js                # AI engine (Gemini 1.5 Flash)
+    │                           #   → callGemini(messages, systemPrompt, onChunk)
+    │                           #   → buildUserContext() — injects real user data into prompt
+    │                           #   → getSystemPrompt()  — full system prompt with context
+    │                           #   → sendMessage(userMsg, onChunk) — manages chat history
+    │                           #   → getSessionSuggestion(context, onChunk) — greeting/complete
+    │                           #   → resetChat()
+    │                           #   → QUICK_PROMPTS[]
+    │
+    └── coachUI.js              # AI Coach UI controller
+                                #   → initCoach()          — called by nav.js on view open
+                                #   → coachSend()          — reads input, calls coach.js, renders
+                                #   → coachKeydown(e)      — Enter to send, Shift+Enter for newline
+                                #   → coachResize(el)      — auto-grow textarea
+                                #   → coachQuickPrompt(p)  — fills + sends a quick prompt
+                                #   → startPlanItem(mins)  — navigates to dashboard + starts timer
+                                #   → tryExtractPlan(text) — parses time mentions → plan panel
+                                #   → addMsg / updateLastCoachMsg / finaliseLastCoachMsg
+
+────────────────────────────────────────────────────────────────────
+DATA FLOW
+────────────────────────────────────────────────────────────────────
+
+  Browser
+    └── index.html
+          └── <script type="module" src="js/app.js">
+                ├── state.js        (imported by almost everything)
+                ├── utils.js        (imported by almost everything)
+                ├── audio.js        ← state
+                ├── nav.js          ← timers, history, settings, coachUI (lazy)
+                ├── keyboard.js     ← nav, dashboard, pomodoro, stopwatch
+                ├── dashboard.js    ← state, utils, audio
+                ├── pomodoro.js     ← state, utils, audio, dashboard
+                ├── stopwatch.js    ← state, utils
+                ├── timers.js       ← state, utils, nav, dashboard
+                ├── history.js      ← state, utils
+                ├── settings.js     ← state, audio, utils
+                ├── coachUI.js      ← coach, nav, utils          (lazy — loaded on first open)
+                └── coach.js        ← state, utils               (Gemini API via proxy)
+
+  localStorage (prefix: chronos_)
+    ├── chronos_settings    { sound, notif, autostart, accent, accent2, volume }
+    ├── chronos_timers      [ { id, name, total, sound, created }, ... ]
+    ├── chronos_history     [ { name, duration, at }, ... ]  (max 200 entries)
+    └── chronos_pomoConfig  { focus, short, long, sessions }
+
+────────────────────────────────────────────────────────────────────
+REQUEST FLOW (AI Coach)
+────────────────────────────────────────────────────────────────────
+
+  coachUI.js
+    → coach.js::sendMessage(userMsg, onChunk)
+        → callGemini(history, systemPrompt, onChunk)
+            → POST http://localhost:3000/gemini/v1beta/models/...
+                → proxy-server.js
+                    → https://generativelanguage.googleapis.com/...?key=GEMINI_API_KEY
+                        ← JSON response
+                ← streamed word-by-word via onChunk callback
+    → coachUI.js::tryExtractPlan(reply)  — auto-builds session plan panel
