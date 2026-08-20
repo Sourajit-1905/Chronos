@@ -5,7 +5,6 @@
   "keywords": ["timer", "pomodoro", "stopwatch", "productivity", "focus", "gemini", "ai"],
   "homepage": "https://github.com/you/chronos",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "start":   "node proxy-server.js",
     "dev":     "node proxy-server.js",
