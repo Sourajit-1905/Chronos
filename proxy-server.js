@@ -1,17 +1,3 @@
-/**
- * proxy-server.js — Gemini edition
- *
- * Serves the Chronos static files and proxies /gemini/* requests to
- * the Google Generative Language API, injecting your API key server-side
- * so it is never exposed in client code.
- *
- * Usage:
- *   GEMINI_API_KEY=AIza... node proxy-server.js
- *
- * Then open http://localhost:3000
- *
- * API key: https://aistudio.google.com/app/apikey
- */
 
 const http = require('http');
 const https = require('https');
@@ -19,7 +5,7 @@ const fs   = require('fs');
 const path = require('path');
 const url  = require('url');
 
-// ── Load .env file automatically ──────────────────────────────────
+//  Load .env file automatically
 // Reads KEY=VALUE lines from .env in the same folder as this script.
 // Skips comments (#) and blank lines. No npm package needed.
 const envPath = path.join(__dirname, '.env');
@@ -50,11 +36,11 @@ const MODEL   = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
 if (!API_KEY) {
   console.warn('⚠️  GEMINI_API_KEY is empty — AI Coach will not work.');
 } else {
-  console.log(`🔑 API key loaded: ${API_KEY.slice(0, 8)}... (${API_KEY.length} chars)`);
+  console.log(`🔑 API key loaded`);
 }
 console.log(`🤖 Model: ${MODEL}`);
 
-// ── MIME types ────────────────────────────────────────────────────
+// MIME types
 const MIME = {
   '.html': 'text/html',
   '.css':  'text/css',
@@ -65,7 +51,7 @@ const MIME = {
   '.ico':  'image/x-icon',
 };
 
-// ── Server ────────────────────────────────────────────────────────
+// Server 
 const server = http.createServer((req, res) => {
   const parsed = url.parse(req.url, true);
 
@@ -76,7 +62,7 @@ const server = http.createServer((req, res) => {
 
   if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
 
-  // ── Proxy: /gemini/* → generativelanguage.googleapis.com ─────
+  // Proxy: /gemini/* → generativelanguage.googleapis.com 
   if (parsed.pathname.startsWith('/gemini/')) {
     const apiPath = parsed.pathname.replace('/gemini', '') + `?key=${API_KEY}`;
     console.log(`\n→ Proxying to: generativelanguage.googleapis.com${apiPath.split('?')[0]}`);
@@ -109,7 +95,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // ── Static file server ────────────────────────────────────────
+  // Static file server 
   let filePath = parsed.pathname === '/' ? '/index.html' : parsed.pathname;
   filePath = path.join(__dirname, filePath);
 
